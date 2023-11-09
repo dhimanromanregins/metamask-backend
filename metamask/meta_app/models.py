@@ -10,7 +10,6 @@ class ChainDetails(models.Model):
     chain_rpc = models.CharField(max_length=1000, unique=True)
     chain_symbol = models.CharField(max_length=100, unique=True)
     chain_logo = models.ImageField()
-
     def __str__(self):
         return self.chain_name
 

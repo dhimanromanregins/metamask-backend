@@ -25,11 +25,12 @@ class GenerateEthereumAccount(APIView):
         except CustomUser.DoesNotExist:
             return Response({"message": "User not found."},
                             status=status.HTTP_404_NOT_FOUND)
-
+        chain_details = ChainDetails.objects.all()
+        chain_details_serializer = ChainDetailsSerializer(chain_details, many=True)
         # Check if an Ethereum account already exists for the user
         user_address = EthereumAccount.objects.filter(user=user).first()
         if user_address:
-            return Response({"message": "User Address already exists", "address": user_address.address,
+            return Response({"message": "User Address already exists", "address": user_address.address,"Chains": chain_details_serializer.data,
                              "Status": status.HTTP_409_CONFLICT}, status=status.HTTP_409_CONFLICT)
         rpc = ChainDetails.objects.filter(chain_symbol=chain_symbol).first()
         rpc_url = rpc.chain_rpc
@@ -53,8 +54,7 @@ class GenerateEthereumAccount(APIView):
         ethereum_account_serializer = EthereumAccountSerializer(ethereum_account)
 
         # Fetch chain details
-        chain_details = ChainDetails.objects.all()
-        chain_details_serializer = ChainDetailsSerializer(chain_details, many=True)
+        
 
         response_data = {
             "User_data": ethereum_account_serializer.data,
@@ -62,7 +62,6 @@ class GenerateEthereumAccount(APIView):
         }
 
         return Response(response_data, status=status.HTTP_201_CREATED)
-
 
 class EthereumBalance(APIView):
     def get(self, request, address, symbol):

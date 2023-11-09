@@ -1,0 +1,21 @@
+[0;1;32m●[0m gunicorn.service - gunicorn daemon
+     Loaded: loaded (]8;;file://vultr/etc/systemd/system/gunicorn.service/etc/systemd/system/gunicorn.service]8;;; [0;1;38;5;185mdisabled[0m; preset: [0;1;32menabled[0m)
+     Active: [0;1;32mactive (running)[0m since Thu 2023-11-09 06:06:45 UTC; 5s ago
+TriggeredBy: [0;1;32m●[0m gunicorn.socket
+   Main PID: 31020 (gunicorn)
+      Tasks: 4 (limit: 2299)
+     Memory: 115.1M
+        CPU: 716ms
+     CGroup: /system.slice/gunicorn.service
+             ├─[0;38;5;245m31020 /home/myenv/bin/python3 /home/myenv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock metamask.wsgi:application[0m
+             ├─[0;38;5;245m31022 /home/myenv/bin/python3 /home/myenv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock metamask.wsgi:application[0m
+             ├─[0;38;5;245m31023 /home/myenv/bin/python3 /home/myenv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock metamask.wsgi:application[0m
+             └─[0;38;5;245m31024 /home/myenv/bin/python3 /home/myenv/bin/gunicorn --access-logfile - --workers 3 --bind unix:/run/gunicorn.sock metamask.wsgi:application[0m
+
+Nov 09 06:06:45 vultr systemd[1]: Started gunicorn.service - gunicorn daemon.
+Nov 09 06:06:45 vultr gunicorn[31020]: [2023-11-09 06:06:45 +0000] [31020] [INFO] Starting gunicorn 21.2.0
+Nov 09 06:06:45 vultr gunicorn[31020]: [2023-11-09 06:06:45 +0000] [31020] [INFO] Listening at: unix:/run/gunicorn.sock (31020)
+Nov 09 06:06:45 vultr gunicorn[31020]: [2023-11-09 06:06:45 +0000] [31020] [INFO] Using worker: sync
+Nov 09 06:06:45 vultr gunicorn[31022]: [2023-11-09 06:06:45 +0000] [31022] [INFO] Booting worker with pid: 31022
+Nov 09 06:06:45 vultr gunicorn[31023]: [2023-11-09 06:06:45 +0000] [31023] [INFO] Booting worker with pid: 31023
+Nov 09 06:06:45 vultr gunicorn[31024]: [2023-11-09 06:06:45 +0000] [31024] [INFO] Booting worker with pid: 31024
