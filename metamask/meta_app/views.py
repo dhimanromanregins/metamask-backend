@@ -10,7 +10,7 @@ from .utils import get_token_logo_path
 from Authentication.models import CustomUser
 
 
-class GenerateEthereumAccount(APIView):
+class GenerateNetworkAccount(APIView):
     def post(self, request):
         user_name = request.data.get('user_name')
         chain_symbol = request.data.get('chain_symbol', 'SSP')
@@ -65,7 +65,7 @@ class GenerateEthereumAccount(APIView):
 
         return Response(response_data, status=status.HTTP_201_CREATED)
 
-class EthereumBalance(APIView):
+class CoinBalance(APIView):
     def get(self, request, address, symbol):
         chain_symbol = request.data.get('symbol')
 
@@ -88,7 +88,7 @@ class EthereumBalance(APIView):
 
 
 
-class EthereumTransactionHistory(APIView):
+class CoinTransactionHistory(APIView):
     def get(self, request, address):
         # Replace with your Etherscan API key
         api_key = "7DI9U879W1P9613SHPVUEKMXF7WDT85D5X"
@@ -112,7 +112,7 @@ class EthereumTransactionHistory(APIView):
 
 
 
-class EthereumTokenInfo(APIView):
+class CoinTokenInfo(APIView):
     def get(self, request, address):
         # Initialize a web3.py instance
         w3 = Web3(Web3.HTTPProvider('https://wider-indulgent-brook.discover.quiknode.pro/67c3e69fe1b270b5f51fa0d46cc048a9963e9a21/'))
@@ -155,7 +155,7 @@ class EthereumTokenInfo(APIView):
             return Response({'error': str(e)})
 
 
-class EthPriceView(APIView):
+class CoinPriceView(APIView):
     def get(self, request):
         crypto_name = request.query_params.get('crypto_name')
         currency = request.query_params.get('currency', 'usd')
@@ -191,7 +191,7 @@ class EthPriceView(APIView):
             return Response({'error': str(e)}, status=500)
 
 
-class SendEthView(APIView):
+class SendCoinView(APIView):
     def post(self, request):
         try:
             data = request.data
