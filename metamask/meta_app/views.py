@@ -12,49 +12,51 @@ from Authentication.models import CustomUser
 
 class GenerateEthereumAccount(APIView):
     def post(self, request):
-        # Extract user_name from the request data (ensure user_name is provided)
         user_name = request.data.get('user_name')
         chain_symbol = request.data.get('chain_symbol', 'SSP')
+
         if user_name is None:
             return Response({"message": "user_name is required in the request data."},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        # Retrieve the user by username
         try:
             user = CustomUser.objects.get(username=user_name)
         except CustomUser.DoesNotExist:
             return Response({"message": "User not found."},
                             status=status.HTTP_404_NOT_FOUND)
+
         chain_details = ChainDetails.objects.all()
         chain_details_serializer = ChainDetailsSerializer(chain_details, many=True)
-        # Check if an Ethereum account already exists for the user
-        user_address = EthereumAccount.objects.filter(user=user).first()
-        if user_address:
-            return Response({"message": "User Address already exists", "address": user_address.address,"Chains": chain_details_serializer.data,
-                             "Status": status.HTTP_409_CONFLICT}, status=status.HTTP_409_CONFLICT)
+
+        user_chain_account = EthereumAccount.objects.filter(user=user, chain_symbol=chain_symbol).first()
+        if user_chain_account:
+            return Response({
+                "message": f"User Address already exists for chain_symbol {chain_symbol}",
+                "address": user_chain_account.address,
+                "Chains": chain_details_serializer.data,
+                "Status": status.HTTP_409_CONFLICT
+            }, status=status.HTTP_409_CONFLICT)
+
         rpc = ChainDetails.objects.filter(chain_symbol=chain_symbol).first()
         rpc_url = rpc.chain_rpc
 
-        # Connect to an Ethereum node (e.g., Infura)
         w3 = Web3(Web3.HTTPProvider(rpc_url))
 
-        # Generate an Ethereum account
         account = Account.create()
         private_key = account.key
         address = account.address
 
-        # Save the Ethereum account to the database, associated with the user
         try:
-            ethereum_account = EthereumAccount.objects.create(user=user, address=address,
-                                                              private_key=private_key.hex())
+            ethereum_account = EthereumAccount.objects.create(
+                user=user,
+                chain_symbol=chain_symbol,
+                address=address,
+                private_key=private_key.hex()
+            )
         except Exception as e:
             return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Serialize Ethereum account details
         ethereum_account_serializer = EthereumAccountSerializer(ethereum_account)
-
-        # Fetch chain details
-        
 
         response_data = {
             "User_data": ethereum_account_serializer.data,

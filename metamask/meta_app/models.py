@@ -5,15 +5,16 @@ from Authentication.models import CustomUser
 
 
 class ChainDetails(models.Model):
+    network_name = models.CharField(max_length=255, unique=True)
     chain_name = models.CharField(max_length=255, unique=True)
-    chain = models.CharField(max_length=255, unique=True)
     chain_rpc = models.CharField(max_length=1000, unique=True)
     chain_symbol = models.CharField(max_length=100, unique=True)
-    chain_logo = models.ImageField()
+    chain_logo = models.ImageField(upload_to="media")
     def __str__(self):
         return self.chain_name
 
 class EthereumAccount(models.Model):
+    chain_symbol = models.CharField(max_length=100, unique=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     address = models.CharField(max_length=100)
     private_key = models.CharField(max_length=100)
